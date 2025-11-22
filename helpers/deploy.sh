@@ -4,13 +4,25 @@ set -e
 # ----------------------------------------
 # Configuration - adjust paths as needed
 # ----------------------------------------
-COMPOSE_DIR="/srv/compose"
+WORKING_DIR="/srv"
+COMPOSE_DIR="$WORKING_DIR/compose"
 SECRETS_FILE="$COMPOSE_DIR/secrets.enc.yaml"
 ENV_FILE="$COMPOSE_DIR/.env"
 AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
 
-# Optional: Docker Compose file if not default
-COMPOSE_FILE="$COMPOSE_DIR/docker-compose.yml"
+# ----------------------------------------
+# 0. Check if there are any updates
+# ----------------------------------------
+
+cd "$WORKING_DIR"
+git fetch origin main
+LOCAL=$(git rev-parse HEAD)
+REMOTE=$(git rev-parse origin/main)
+
+if [ "$LOCAL" == "$REMOTE" ]; then
+    echo "No updates found; skipping..."
+    exit 0
+fi
 
 # ----------------------------------------
 # 1. Ensure age key exists
