@@ -15,4 +15,5 @@ fi
 
 # We only run this if updates were found
 echo "Found updates!"
+git reset --hard origin/main
 $WORKING_DIR/helpers/deploy.sh
