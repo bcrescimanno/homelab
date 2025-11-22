@@ -21,7 +21,7 @@ services:
         - "53:53/udp"
         - "8081:80/tcp"
       environment:
-        TZ: 'America/Los_Angeles'
+        TZ: ${TZ}
         FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
       volumes:
         - /srv/volumes/pihole/etc-pihole:/etc/pihole
