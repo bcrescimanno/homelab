@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+# Colors
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[1;33m"
+BLUE="\033[0;34m"
+BOLD="\033[1m"
+RESET="\033[0m"
+
+echo -e "Updating server ${GREEN}$1${RESET} based on latest github..."
+ssh $(whoami)@$1 '/srv/helpers/pull.sh'
