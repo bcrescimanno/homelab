@@ -5,6 +5,7 @@ set -e
 # Configuration - adjust paths as needed
 # ----------------------------------------
 WORKING_DIR="/srv"
+HELPERS_DIR="$WORKING_DIR/helpers"
 COMPOSE_DIR="$WORKING_DIR/compose"
 SECRETS_FILE="$COMPOSE_DIR/secrets.enc.yaml"
 ENV_FILE="$COMPOSE_DIR/.env"
@@ -34,7 +35,14 @@ chmod 600 "$ENV_FILE"
 echo ".env file generated at $ENV_FILE"
 
 # ----------------------------------------
-# 3. Deploy the Docker Compose stack
+# 3. Ensure directories exist
+# ----------------------------------------
+echo "Creating any missing directories..."
+$HELPERS_DIR/directories.sh $COMPOSE_DIR/docker-compose.yml
+
+
+# ----------------------------------------
+# 4. Deploy the Docker Compose stack
 # ----------------------------------------
 echo "Deploying Docker Compose stack..."
 cd "$COMPOSE_DIR"
