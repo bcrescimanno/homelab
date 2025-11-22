@@ -48,6 +48,18 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     network_mode: host
 
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - /srv/volumes/homepage/config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      HOMEPAGE_ALLOWED_HOSTS: gethomepage.dev
+
 networks:
   bridgenet:
     name: "pi2bridge"
