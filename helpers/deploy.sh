@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 set -e
 
 # ----------------------------------------
@@ -42,8 +42,8 @@ echo "Deploying Docker Compose stack..."
 cd "$COMPOSE_DIR"
 
 # Pull updated images and start services
-#docker compose pull
-#docker compose up -d
+docker compose pull
+docker compose up -d
 
 echo "Deployment complete."
 
