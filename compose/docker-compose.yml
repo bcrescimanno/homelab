@@ -58,7 +58,7 @@ services:
       - /srv/volumes/homepage/config:/app/config
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      HOMEPAGE_ALLOWED_HOSTS: gethomepage.dev
+      HOMEPAGE_ALLOWED_HOSTS: pi2:3000
 
 networks:
   bridgenet:
