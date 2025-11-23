@@ -39,8 +39,6 @@ services:
       - FULL_SYNC=true
       - RUN_GRAVITY=true
       - CRON=0 * * * *
-    network:
-      - bridgenet
 
   portainer-agent:
     container_name: 'portainer-agent'
