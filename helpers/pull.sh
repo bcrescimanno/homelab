@@ -9,11 +9,11 @@ LOCAL=$(git rev-parse HEAD)
 REMOTE=$(git rev-parse origin/main)
 
 if [ "$LOCAL" == "$REMOTE" ]; then
-    echo "No updates found; skipping..."
+    echo "No updates found for $HOSTNAME; skipping..."
     exit 0
 fi
 
 # We only run this if updates were found
-echo "Found updates!"
+echo "Found updates for $HOSTNAME"
 git reset --hard origin/main
 $WORKING_DIR/helpers/deploy.sh

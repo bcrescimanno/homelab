@@ -1,14 +1,16 @@
 #!/bin/bash
 set -e
 
+echo "Beginning deployment on $HOSTNAME"
+
 # ----------------------------------------
 # Configuration - adjust paths as needed
 # ----------------------------------------
 WORKING_DIR="/srv"
 HELPERS_DIR="$WORKING_DIR/helpers"
-COMPOSE_DIR="$WORKING_DIR/compose"
+COMPOSE_DIR="$WORKING_DIR/$HOSTNAME/compose"
 SECRETS_FILE="$COMPOSE_DIR/secrets.enc.yaml"
-ENV_FILE="$COMPOSE_DIR/.env"
+ENV_FILE="$COMPOSE_DIR/$HOSTNAME/.env"
 AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
 
 # ----------------------------------------
