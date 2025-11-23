@@ -18,9 +18,7 @@ services:
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
     environment:
-      WATCHTOWER_NOTIFICATION_URL: /run/secrets/notify_url
-    secrets:
-      - notify_url
+      WATCHTOWER_NOTIFICATION_URL: ${DISCORD_NOTIFY_URL}
   portainer:
     container_name: portainer
     image: portainer/portainer-ce:latest
