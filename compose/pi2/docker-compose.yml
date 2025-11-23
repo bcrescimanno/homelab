@@ -25,6 +25,7 @@ services:
         FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
       volumes:
         - /srv/volumes/pihole/etc-pihole:/etc/pihole
+        - /srv/volumes/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
       restart: unless-stopped
       networks:
         - bridgenet
