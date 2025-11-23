@@ -1,0 +1,87 @@
+services:
+  nginx-proxy-manager:
+    container_name: nginx-proxy-manager
+    image: jc21/nginx-proxy-manager:latest
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 81:81
+      - 443:443
+    volumes:
+      - /srv/volumes/nginx-data:/data
+      - /srv/volumes/letsencrypt:/etc/letsencrypt
+  watchtower:
+    container_name: "Pi-Watchtower"
+    hostname: "pi-watchtower"
+    image: nickfedor/watchtower
+    restart: unless-stopped
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    environment:
+      WATCHTOWER_NOTIFICATION_URL: /run/secrets/notify_url
+    secrets:
+      - notify_url
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:latest
+    ports:
+      - '9443:9443/tcp'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /srv/volumes/portainer-data:/data
+    restart: unless-stopped
+  portainer-agent:
+    container_name:  portainer-agent
+    image: portainer/agent:latest
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  pihole:
+      container_name: pihole
+      hostname: "ns2"
+      image: pihole/pihole:latest
+      ports:
+        - "53:53/tcp"
+        - "53:53/udp"
+        - "8081:80/tcp"
+      environment:
+        TZ: ${TZ}
+        FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
+      volumes:
+        - '/srv/volumes/pihole/etc-pihole:/etc/pihole'
+      restart: unless-stopped
+      logging:
+        driver: json-file
+        options:
+          max-size: "10mb"
+          max-file: "1"
+      networks:
+        - bridgenet
+  matter-server:
+    image: "ghcr.io/home-assistant-libs/python-matter-server:stable"
+    container_name: matter-server
+    restart: unless-stopped
+    network_mode: host
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - '/srv/volumes/matter-server/data:/data/'
+      - /run/dbus:/run/dbus:ro
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes: 
+      - '/srv/volumes/homeassistant:/config'
+      - '/etc/localtime:/etc/localtime:ro'
+      - '/run/dbus:/run/dbus:ro'
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+
+networks:
+  bridgenet:
+    name: "Mega Bridge"
+    driver: bridge
+    enable_ipv4: true
+    enable_ipv6: true
