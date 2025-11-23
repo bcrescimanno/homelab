@@ -8,9 +8,10 @@ echo "Beginning deployment on $HOSTNAME"
 # ----------------------------------------
 WORKING_DIR="/srv"
 HELPERS_DIR="$WORKING_DIR/helpers"
-COMPOSE_DIR="$WORKING_DIR/$HOSTNAME/compose"
-SECRETS_FILE="$COMPOSE_DIR/secrets.enc.yaml"
-ENV_FILE="$COMPOSE_DIR/$HOSTNAME/.env"
+COMPOSE_DIR="$WORKING_DIR/compose/$HOSTNAME"
+ENV_FILE="$COMPOSE_DIR/.env"
+
+SECRETS_FILE="$WORKING_DIR/compose/secrets.enc.yaml"
 AGE_KEY_FILE="$HOME/.config/sops/age/keys.txt"
 
 # ----------------------------------------
