@@ -10,4 +10,10 @@ BOLD="\033[1m"
 RESET="\033[0m"
 
 echo -e "Updating server ${GREEN}$1${RESET} based on latest github..."
-ssh $(whoami)@$1 '/srv/helpers/pull.sh'
+
+if [ $1 == $HOSTNAME ]; then
+	echo "Hey, that's me!"
+	/srv/helpers/pull.sh
+else
+	ssh $(whoami)@$1 '/srv/helpers/pull.sh'
+fi
