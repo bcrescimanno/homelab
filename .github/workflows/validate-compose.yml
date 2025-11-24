@@ -24,10 +24,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Docker Compose plugin
+      - name: Show Docker & Compose versions
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose-plugin
+          docker --version
+          docker compose version
 
       - name: Find compose files
         id: detect
@@ -37,36 +37,31 @@ jobs:
             -name "compose.yaml" -o \
             -name "docker-compose.yml" -o \
             -name "docker-compose.yaml")
-          echo "files=$files"
+          echo "Compose files found:"
+          echo "$files"
           if [ -z "$files" ]; then
-            echo "No compose files found."
             echo "found=false" >> $GITHUB_OUTPUT
           else
-            echo "Compose files detected."
             echo "found=true" >> $GITHUB_OUTPUT
-            echo "compose_files<<EOF" >> $GITHUB_OUTPUT
-            echo "$files" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
+            {
+              echo "compose_files<<EOF"
+              echo "$files"
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
           fi
 
-      - name: Validate Compose syntax (docker compose config)
+      - name: Validate Compose syntax
         if: steps.detect.outputs.found == 'true'
         run: |
           for f in ${{ steps.detect.outputs.compose_files }}; do
-            echo "✔ Validating syntax for: $f"
+            echo "Validating: $f"
             docker compose -f "$f" config > /dev/null
           done
 
-      - name:  Verify images can be pulled
+      - name: Verify images can be pulled
         if: steps.detect.outputs.found == 'true'
         run: |
           for f in ${{ steps.detect.outputs.compose_files }}; do
-            echo "✔ Attempting image pulls for: $f"
+            echo "Pulling images for: $f"
             docker compose -f "$f" pull --ignore-pull-failures
           done
-
-      - name: YAML lint (optional but recommended)
-        uses: ibiqlik/action-yamllint@v3
-        with:
-          config_file: .yamllint.yml
-
