@@ -1,0 +1,72 @@
+name: Validate Docker Compose
+
+on:
+  pull_request:
+    paths:
+      - "**/compose.yml"
+      - "**/compose.yaml"
+      - "**/docker-compose.yml"
+      - "**/docker-compose.yaml"
+      - ".github/workflows/validate-compose.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "**/compose.yml"
+      - "**/compose.yaml"
+      - "**/docker-compose.yml"
+      - "**/docker-compose.yaml"
+
+jobs:
+  validate-compose:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Docker Compose plugin
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose-plugin
+
+      - name: Find compose files
+        id: detect
+        run: |
+          files=$(find . \
+            -name "compose.yml" -o \
+            -name "compose.yaml" -o \
+            -name "docker-compose.yml" -o \
+            -name "docker-compose.yaml")
+          echo "files=$files"
+          if [ -z "$files" ]; then
+            echo "No compose files found."
+            echo "found=false" >> $GITHUB_OUTPUT
+          else
+            echo "Compose files detected."
+            echo "found=true" >> $GITHUB_OUTPUT
+            echo "compose_files<<EOF" >> $GITHUB_OUTPUT
+            echo "$files" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validate Compose syntax (docker compose config)
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          for f in ${{ steps.detect.outputs.compose_files }}; do
+            echo "✔ Validating syntax for: $f"
+            docker compose -f "$f" config > /dev/null
+          done
+
+      - name: Optional: Verify images can be pulled
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          for f in ${{ steps.detect.outputs.compose_files }}; do
+            echo "✔ Attempting image pulls for: $f"
+            docker compose -f "$f" pull --ignore-pull-failures
+          done
+
+      - name: YAML lint (optional but recommended)
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint.yml
+
