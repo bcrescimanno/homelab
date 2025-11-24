@@ -2,5 +2,6 @@ services:
   watchtower:
     hostname: "Pi"
   pihole:
+    hostname: "ns2"
     networks:
       - bridgenet
