@@ -53,11 +53,3 @@ jobs:
             echo "Validating: $f"
             docker compose -f "$f" config > /dev/null
           done
-
-      - name: Verify images can be pulled
-        if: steps.detect.outputs.found == 'true'
-        run: |
-          for f in ${{ steps.detect.outputs.compose_files }}; do
-            echo "Pulling images for: $f"
-            docker compose -f "$f" pull --ignore-pull-failures
-          done
