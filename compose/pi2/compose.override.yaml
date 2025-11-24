@@ -1,6 +1,7 @@
 services:
   watchtower:
-    hostname: "Pi"
+    hostname: "Pi2"
   pihole:
     networks:
       - bridgenet
+

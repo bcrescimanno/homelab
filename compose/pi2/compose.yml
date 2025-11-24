@@ -1,53 +1,20 @@
 services:
-
-  # Keeps containers up to date automatically
-  watchtower:
-    container_name: "pi2-wt"
-    hostname: "pi2-watchtower"
-    image: nickfedor/watchtower
-    restart: unless-stopped
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock'
-    environment:
-      WATCHTOWER_NOTIFICATION_URL: ${DISCORD_NOTIFY_URL}
-
-  # NS1 runs on Pi2. Its weird
-  pihole:
-      container_name: pihole
-      hostname: "ns1"
-      image: pihole/pihole:latest
-      ports:
-        - "53:53/tcp"
-        - "53:53/udp"
-        - "8081:80/tcp"
-      environment:
-        TZ: ${TZ}
-        FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
-      volumes:
-        - /srv/volumes/pihole/etc-pihole:/etc/pihole
-      restart: unless-stopped
-      networks:
-        - bridgenet
-
+  include:
+    - ../common/pihole.yml
+    - ../common/watchtower.yml
+    - ../common/docker-socket-proxy.yml
+    - ../common/portainer-agent.yml
+    - ../common/glances.yml
   nebula-sync:
     container_name: 'Nebula-Sync'
     image: ghcr.io/lovelaze/nebula-sync:latest
     restart: unless-stopped
     environment:
-      - PRIMARY=https://ns1.home.crescimanno.com|${PIHOLE_PASSWORD}
-      - REPLICAS=https://ns2.home.crescimanno.com|${PIHOLE_PASSWORD}
+      - PRIMARY=https://ns1.theshire.io|${PIHOLE_PASSWORD}
+      - REPLICAS=https://ns2.theshire.io|${PIHOLE_PASSWORD}
       - FULL_SYNC=true
       - RUN_GRAVITY=true
       - CRON=0 * * * *
-
-  portainer-agent:
-    container_name: 'portainer-agent'
-    image: portainer/agent:latest
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    network_mode: host
-
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
@@ -59,7 +26,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       HOMEPAGE_ALLOWED_HOSTS: home.theshire.io
-
 networks:
   bridgenet:
     name: "pi2bridge"
