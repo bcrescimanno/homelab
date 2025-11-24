@@ -28,8 +28,7 @@ jobs:
         run: |
           docker --version
           docker compose version
-
-      - name: Find compose files
+      - name: find compose files
         id: detect
         run: |
           files=$(find . \
@@ -37,17 +36,14 @@ jobs:
             -name "compose.yaml" -o \
             -name "docker-compose.yml" -o \
             -name "docker-compose.yaml")
-          echo "Compose files found:"
-          echo "$files"
+
           if [ -z "$files" ]; then
             echo "found=false" >> $GITHUB_OUTPUT
           else
             echo "found=true" >> $GITHUB_OUTPUT
-            {
-              echo "compose_files<<EOF"
-              echo "$files"
-              echo "EOF"
-            } >> $GITHUB_OUTPUT
+            # Convert multiline → space-separated list
+            file_list=$(echo "$files" | tr '\n' ' ')
+            echo "compose_files=$file_list" >> $GITHUB_OUTPUT
           fi
 
       - name: Validate Compose syntax
