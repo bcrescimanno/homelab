@@ -45,6 +45,7 @@ services:
       - TZ=${TZ}
       - WIREGUARD_PRIVATE_KEY=${MULLVAD_KEY}
       - WIREGUARD_ADDRESSES=10.64.222.21/32
+      - WIREGUARD_CITIES=Atlanta, Chicago, Los Angeles, Miami, Houston, Boston, Denver, Detroit, Kansas City, New York, Raleigh, Salt Lake City, San Jose, Seattle
     networks:
       - private
 networks:
