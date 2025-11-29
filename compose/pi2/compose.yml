@@ -42,12 +42,13 @@ services:
     volumes:
       - /srv/volumes/gluetun:/gluetun
     environment:
-      - VPN_SERVICE_PROVIDER=mullvad
+      - VPN_SERVICE_PROVIDER=protonvpn
       - VPN_TYPE=wireguard
       - TZ=${TZ}
-      - WIREGUARD_PRIVATE_KEY=${MULLVAD_KEY}
-      - WIREGUARD_ADDRESSES=10.64.222.21/32
-      - SERVER_COUNTRIES=USA, Canada
+      - WIREGUARD_PRIVATE_KEY=${PROTON_KEY}
+      - FREE_ONLY=on
+      - PORT_FORWARD_ONLY=on
+        VPN_PORT_FORWARDING=on
       - QBT_WEBUI_ENABLED=true
     networks:
       - private
