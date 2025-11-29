@@ -75,8 +75,6 @@ services:
       - TZ=${TZ}
     volumes: 
       - /srv/volumes/prowlarr:/config
-    ports:
-      - 9696:9696
 
 networks:
   bridgenet:
