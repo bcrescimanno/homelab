@@ -44,7 +44,7 @@ services:
       - VPN_TYPE=wireguard
       - TZ=${TZ}
       - WIREGUARD_PRIVATE_KEY=${MULLVAD_KEY}
-      - WIREGUARD_ADDRESS=10.64.222.21/32
+      - WIREGUARD_ADDRESSES=10.64.222.21/32
     networks:
       - private
 networks:
