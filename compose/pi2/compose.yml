@@ -26,9 +26,35 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       HOMEPAGE_ALLOWED_HOSTS: home.theshire.io
+  gluetun:
+  image: qmcgaw/gluetun
+  cap_add:
+    - NET_ADMIN
+  devices:
+    - /dev/net/tun:/dev/net/tun
+  ports:
+    - 8888:8888/tcp
+    - 8388:8388/tcp
+    - 8388:8388/udp
+  volumes:
+    - /srv/volumes/gluetun:/gluetun
+  environment:
+    - VPN_SERVICE_PROVIDER=mullvad
+    - VPN_TYPE=wireguard
+    - TZ=${TZ}
+    - WIREGUARD_PRIVATE_KEY=${MULLVAD_KEY}
+    - WIREGUARD_ADDRESS=10.64.222.21/32
+  networks:
+    - private
 networks:
   bridgenet:
     name: "pi2bridge"
     driver: bridge
     enable_ipv4: true
     enable_ipv6: true
+  private:
+    name: "SevenSeas"
+    driver: bridge
+    enable_ipv4: true
+    enable_ipv6: true
+
