@@ -48,6 +48,7 @@ services:
       - WIREGUARD_PRIVATE_KEY=${PROTON_KEY}
       - PORT_FORWARD_ONLY=on
       - VPN_PORT_FORWARDING=on
+      - VPN_PORT_FORWARDING_PROVIDER=protonvpn
     networks:
       - private
   qbittorrent:
