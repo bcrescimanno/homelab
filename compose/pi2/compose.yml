@@ -36,6 +36,7 @@ services:
       - /dev/net/tun:/dev/net/tun
     ports:
       - 8080:8080/tcp
+      - 9696:9696/tcp
       - 8888:8888/tcp
       - 8388:8388/tcp
       - 8388:8388/udp
@@ -69,6 +70,7 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     restart: unless-stopped
+    network_mode: "service:gluetun"
     environment:
       - TZ=${TZ}
     volumes: 
