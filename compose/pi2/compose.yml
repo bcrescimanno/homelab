@@ -65,8 +65,7 @@ services:
       - /srv/volumes/qbittorrent:/config
       - /srv/volumes/incomplete:/incomplete
       - /srv/volumes/downloads:/downloads
-    networks:
-      - private
+
 networks:
   bridgenet:
     name: "pi2bridge"
