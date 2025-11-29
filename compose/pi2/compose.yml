@@ -57,7 +57,8 @@ services:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     restart: unless-stopped
-    network_mode: "service:gluetun"
+    networks: 
+      - private
     environment: 
       - TZ=${TZ}
       - WEBUI_PORT=8080
