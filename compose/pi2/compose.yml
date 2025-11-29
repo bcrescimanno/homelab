@@ -57,6 +57,8 @@ services:
     container_name: qbittorrent
     restart: unless-stopped
     network_mode: "service:gluetun"
+    cap_add:
+      - NET_ADMIN
     environment: 
       - PUID=1000
       - PGID=1000
