@@ -47,7 +47,6 @@ services:
       - VPN_TYPE=wireguard
       - TZ=${TZ}
       - WIREGUARD_PRIVATE_KEY=${PROTON_KEY}
-      - FREE_ONLY=on
       - PORT_FORWARD_ONLY=on
       - VPN_PORT_FORWARDING=on
       - QBT_WEBUI_ENABLED=true
