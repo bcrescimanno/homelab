@@ -41,7 +41,7 @@ echo ".env file generated at $ENV_FILE"
 # 3. Ensure directories exist
 # ----------------------------------------
 echo "Creating any missing directories..."
-$HELPERS_DIR/directories.sh $COMPOSE_DIR/compose.yml
+#$HELPERS_DIR/directories.sh $COMPOSE_DIR/compose.yml
 
 
 # ----------------------------------------
