@@ -70,7 +70,6 @@ services:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     restart: unless-stopped
-    network_mode: "service:gluetun"
     environment:
       - TZ=${TZ}
     volumes: 
