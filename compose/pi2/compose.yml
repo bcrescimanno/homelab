@@ -29,10 +29,13 @@ services:
   gluetun:
     container_name: gluetun
     image: qmcgaw/gluetun
+    restart: unless-stopped
     cap_add:
       - NET_ADMIN
     devices:
       - /dev/net/tun:/dev/net/tun
+    sysctls:
+      - net.ipv6.conf.all.disable=ipv6=1
     ports:
       - 8888:8888/tcp
       - 8388:8388/tcp
@@ -45,7 +48,23 @@ services:
       - TZ=${TZ}
       - WIREGUARD_PRIVATE_KEY=${MULLVAD_KEY}
       - WIREGUARD_ADDRESSES=10.64.222.21/32
-      - WIREGUARD_CITIES=Atlanta, Chicago, Los Angeles, Miami, Houston, Boston, Denver, Detroit, Kansas City, New York, Raleigh, Salt Lake City, San Jose, Seattle
+      - SERVER_COUNTRIES=USA, Canada
+      - QBT_WEBUI_ENABLED=true
+    networks:
+      - private
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: unless-stopped
+    network_mode: "service:gluetun"
+    environment: 
+      - TZ=${TZ}
+      - WEBUI_PORT=8080
+      - QBITTORRENT_INTERFACE=tun0
+    volumes: 
+      - /srv/volumes/qbittorrent:/config
+      - /srv/volumes/incomplete:/incomplete
+      - /srv/volumes/downloads:/downloads
     networks:
       - private
 networks:
@@ -55,8 +74,8 @@ networks:
     enable_ipv4: true
     enable_ipv6: true
   private:
-    name: "SevenSeas"
+    name: "private"
     driver: bridge
     enable_ipv4: true
-    enable_ipv6: true
+    enable_ipv6: false
 
