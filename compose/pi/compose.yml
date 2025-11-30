@@ -57,7 +57,7 @@ services:
       - bridgenet
     volumes:
       - /srv/volumes/jellyfin/config:/config
-      - /srv/volumes/jellyfind/cache:/cache
+      - /srv/volumes/jellyfin/cache:/cache
       - type: bind
         source: /src/media
         target: /media
