@@ -59,7 +59,7 @@ services:
       - /srv/volumes/jellyfin/config:/config
       - /srv/volumes/jellyfin/cache:/cache
       - type: bind
-        source: /src/media
+        source: /srv/media
         target: /media
 
 networks:
