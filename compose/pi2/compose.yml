@@ -26,59 +26,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       HOMEPAGE_ALLOWED_HOSTS: home.theshire.io
-  gluetun:
-    container_name: gluetun
-    image: qmcgaw/gluetun:v3
-    restart: unless-stopped
-    cap_add:
-      - NET_ADMIN
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    ports:
-      - 8080:8080/tcp
-    volumes:
-      - /srv/volumes/gluetun:/gluetun
-    environment:
-      - TZ=${TZ}
-      - UPDATER_PERIOD=24h
-      - VPN_SERVICE_PROVIDER=protonvpn
-      - VPN_TYPE=wireguard
-      - BLOCK_MALICIOUS=off
-      - WIREGUARD_PRIVATE_KEY=${PROTON_KEY}
-      - PORT_FORWARD_ONLY=on
-      - VPN_PORT_FORWARDING=on
-      - VPN_PORT_FORWARDING_UP_COMMAND=/bin/sh -c 'wget -O- --retry-connrefused --post-data "json={\"listen_port\":{{PORTS}}}" http://127.0.0.1:8080/api/v2/app/setPreferences 2>&1'
-  qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
-    depends_on:
-      gluetun:
-        condition: service_healthy
-    restart: unless-stopped
-    network_mode: "service:gluetun"
-    cap_add:
-      - NET_ADMIN
-    environment: 
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-      - WEBUI_PORT=8080
-    volumes: 
-      - /srv/volumes/qbittorrent:/config
-      - /srv/volumes/downloads/incomplete:/incomplete
-      - /srv/volumes/downloads/finished:/downloads
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=${TZ}
-    volumes: 
-      - /srv/volumes/prowlarr:/config
-    networks:
-      - private
 
 networks:
   bridgenet:
@@ -86,9 +33,3 @@ networks:
     driver: bridge
     enable_ipv4: true
     enable_ipv6: true
-  private:
-    name: "private"
-    driver: bridge
-    enable_ipv4: true
-    enable_ipv6: false
-
