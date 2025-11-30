@@ -26,6 +26,35 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       HOMEPAGE_ALLOWED_HOSTS: home.theshire.io
+  unbound:
+    image: madnuttah/unbound:latest
+    container_name: unbound
+    hostname: unbound
+    domainname: local
+    restart: unless-stopped
+    healthcheck:
+      test: /usr/local/unbound/sbin/healthcheck.sh
+      interval: 60s
+      retries: 5
+      start_period: 15s
+      timeout: 30s
+    ports:
+      - 5335:5335/tcp
+      - 5335:5335/udp
+    networks:
+      bridgenet:
+        ipv4_address: 172.21.0.100
+    environment:
+      TZ: ${TZ}
+      UNBOUND_UID: 1000
+      UNBOUND_GID: 1000
+      HEALTHCHECK_PORT: 5335
+      ENABLE_STATS: false
+    volumes:
+      - /srv/volumes/unbound/unbound.conf:/usr/local/unbound/unbound.conf:rw
+      - /srv/volumes/unbound/conf.d/:/usr/local/unbound/conf.d/:rw
+      - /srv/volumes/unbound/log.d/unbound.log:/usr/local/unbound/log.d/unbound.log:rw
+      - /srv/volumes/unbound/zones.d/:/usrlocal/unbound/zones.d/:rw
 
 networks:
   bridgenet:
@@ -33,3 +62,6 @@ networks:
     driver: bridge
     enable_ipv4: true
     enable_ipv6: true
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24
