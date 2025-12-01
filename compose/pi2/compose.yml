@@ -49,12 +49,34 @@ services:
       UNBOUND_UID: 1000
       UNBOUND_GID: 1000
       HEALTHCHECK_PORT: 5335
-      ENABLE_STATS: false
+      ENABLE_STATS: true
     volumes:
       - /srv/volumes/unbound/unbound.conf:/usr/local/unbound/unbound.conf:rw
       - /srv/volumes/unbound/conf.d/:/usr/local/unbound/conf.d/:rw
       - /srv/volumes/unbound/log.d/unbound.log:/usr/local/unbound/log.d/unbound.log:rw
       - /srv/volumes/unbound/zones.d/:/usrlocal/unbound/zones.d/:rw
+  unbound-socket:
+    image: busybox
+    container_name: unbound-socket
+    init: true
+    tty: true
+    command:
+      - /bin/sh
+      - -c
+      - |
+      - chown -R 999:1000 /usr/local/unbound/cachedb.d/
+        /bin/sh
+    volumes:
+      - /srv/volumes/unbound/cachedb.d:/usr/local/unbound/cachedb.d/
+
+  redis:
+    container_name: unbound-cache
+    image: redis:alpine
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes: 
+      - /srv/volumes/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - /.../unbound-cache/healthcheck.sh
+      - /srv/volumes/unbound/cachedb.d:/usr/local/unbound/cachedb.d/
 
 networks:
   bridgenet:
