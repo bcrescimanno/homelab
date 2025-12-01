@@ -75,7 +75,6 @@ services:
     command: redis-server /usr/local/etc/redis/redis.conf
     volumes: 
       - /srv/volumes/redis/redis.conf:/usr/local/etc/redis/redis.conf
-      - /.../unbound-cache/healthcheck.sh
       - /srv/volumes/unbound/cachedb.d:/usr/local/unbound/cachedb.d/
 
 networks:
