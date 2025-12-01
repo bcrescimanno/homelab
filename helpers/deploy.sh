@@ -52,6 +52,7 @@ cd "$COMPOSE_DIR"
 
 # Pull updated images and start services
 docker compose pull
+docker compose down
 docker compose up -d
 
 echo "Deployment complete."
