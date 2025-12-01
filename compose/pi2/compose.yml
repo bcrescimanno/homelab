@@ -56,19 +56,17 @@ services:
       - /srv/volumes/unbound/log.d/unbound.log:/usr/local/unbound/log.d/unbound.log:rw
       - /srv/volumes/unbound/zones.d/:/usrlocal/unbound/zones.d/:rw
       - cachedb.d:/usr/local/unbound/cachedb.d/
+
   unbound-socket:
     image: busybox
-    container_name: unbound-socket
+    container_name: unbound-db-socket
     init: true
     tty: true
-    command:
-      - /bin/sh
-      - -c
-      - |
-      - chown -R 999:1000 /usr/local/unbound/cachedb.d/
-        /bin/sh
+    command: /bin/sh -c "chown -R 999:1000 /usr/local/unbound/cachedb.d/"
     volumes:
       - cachedb.d:/usr/local/unbound/cachedb.d/
+    networks: 
+      bridgenet:
 
   redis:
     container_name: unbound-cache
@@ -77,6 +75,9 @@ services:
     volumes: 
       - /srv/volumes/redis/redis.conf:/usr/local/etc/redis/redis.conf
       - cachedb.d:/usr/local/unbound/cachedb.d/
+    networks:
+      bridgenet:
+
 volumes:
   cachedb.d:
 
